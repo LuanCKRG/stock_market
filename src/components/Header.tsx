@@ -4,13 +4,12 @@
 // #186995
 
 import { useState } from "react"
-import sol, { resType } from "@/actions/search"
+import sol from "@/actions/search"
 import { IoMdSearch, IoMdMenu, IoMdPerson } from "react-icons/io"
-import { FaUser } from "react-icons/fa"
 import Link from "next/link"
-import { Modal } from "./Modal"
 import { IoReload } from "react-icons/io5"
 import Image from "next/image"
+import { ApiResponse, Stocks } from "@/types"
 
 interface InputValues {
   search: string
@@ -20,16 +19,7 @@ export const Header = () => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
   const [spinner, setSpinner] = useState<boolean>(false)
   const [search, setSearch] = useState<string>("")
-  const [res, setRes] = useState<{
-    stock: string
-    name: string
-    close: number
-    change: number
-    volume: number
-    market_cap: number | null
-    logo: string
-    sector: string | null
-  }[] | []>([])
+  const [res, setRes] = useState<Stocks[] | []>([])
   // const {} = useController(UseControllerProps<InputValues>)
 
   const toggleModal = () => {
@@ -44,7 +34,7 @@ export const Header = () => {
     setSearch(value)
 
     if (value.length > 1) {
-      const { stocks } = await sol<resType>(value)
+      const { stocks } = await sol<ApiResponse>(value)
       setRes(stocks)
     } else {
       setRes([])
